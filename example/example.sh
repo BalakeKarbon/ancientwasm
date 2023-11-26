@@ -1,5 +1,11 @@
 #!/bin/bash
 echo "Building Example..."
-./compile.sh
+echo "Native..."
+./compile-native.sh
+echo "Web Assembly..."
+./compile-wasm.sh
 echo "Running Example..."
-node a.out.js
+echo "Native:"
+./example
+echo "Web Assembly:"
+node example.js
