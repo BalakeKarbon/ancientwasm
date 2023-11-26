@@ -37,4 +37,4 @@ RUN emmake make
 WORKDIR /root
 
 #get demo
-ADD demo /root/demo
+ADD example /root/example
