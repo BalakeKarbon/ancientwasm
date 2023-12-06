@@ -53,6 +53,11 @@ RUN emmake make
 RUN cp *.a /usr/share/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/
 RUN yes | cp -f *.h /usr/share/emsdk/upstream/emscripten/cache/sysroot/include/
 
+#clean up
+RUN rm -rf /usr/src/gmp-6.3.0
+RUN rm -rf /usr/src/gnucobol-3.2
+RUN rm -rf /usr/src/libf2c
+
 WORKDIR /root
 
 #get demo
