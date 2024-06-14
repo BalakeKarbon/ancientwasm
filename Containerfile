@@ -49,6 +49,13 @@ RUN mkdir libf2c
 WORKDIR /usr/src/libf2c
 RUN unzip /usr/src/libf2c.zip
 RUN cp makefile.u makefile
+RUN sed -i 's/CC = cc/CC = emcc/g' makefile
+RUN sed -i 's/-DSkip_f2c_Undefs//g' makefile
+RUN sed -i 's/ld -r -x -o/#ld -r -x -o/g' makefile
+RUN sed -i 's/mv \$\*\.xxx \$\*\.o/#mv \$\*\.xxx \$\*\.o/g' makefile
+RUN sed -i 's/\.\/a\.out/node a.out.js/g' makefile
+RUN sed -i 's/rm -f a\.out/rm -f a\.out\.js a\.out\.wasm/g' makefile
+RUN sed -i 's/CFLAGS = -O/CFLAGS = /g' makefile
 RUN emmake make
 RUN cp *.a /usr/share/emsdk/upstream/emscripten/cache/sysroot/lib/wasm32-emscripten/
 RUN yes | cp -f *.h /usr/share/emsdk/upstream/emscripten/cache/sysroot/include/
