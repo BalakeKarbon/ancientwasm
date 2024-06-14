@@ -67,5 +67,6 @@ RUN rm -rf /usr/src/libf2c
 
 WORKDIR /root
 
-#get demo
-ADD example /root/example
+#get demos
+ADD demo1 /root/demo1
+ADD demo2 /root/demo2
