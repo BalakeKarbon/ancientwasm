@@ -1,0 +1,42 @@
+<html>
+	<head><title>Example Usage</title></head>
+	<body>
+		<div class="emscripten" id="output"></div>
+		<script type='text/javascript'>
+			document.getElementById('output').innerHTML = "Running COBOL, FORTRAN, and Javascript interfaced together and compiled into WebAssembly!<br>";
+			var Module = {
+				print: (function() {
+				var element = document.getElementById('output');
+				if (element) element.value = ''; // clear browser cache
+				return (...args) => {
+					var text = args.join(' ');
+					console.log(text);
+					if (element) {
+						element.innerHTML += text + "<br>";
+					}
+				};
+				})()
+			};
+		</script>
+		<script src="example.js"></script>
+		<div>
+		main.cbl:
+		<code><br>
+IDENTIFICATION DIVISION.<br>PROGRAM-ID. MAIN.<br>DATA DIVISION.<br>       WORKING-STORAGE SECTION.<br>       01 INDEX1 USAGE IS BINARY-LONG SIGNED.<br>       01 RETURN1 USAGE IS BINARY-LONG SIGNED.<br>       01 JSCODE PIC A(37) VALUE 'console.log("Hello from Javascript")'.<br>       01 RETURN2 USAGE IS BINARY-LONG SIGNED.<br>       01 RS PIC X(26) VALUE HIGH-VALUE.<br>       01 RSV PIC X(1).<br>       PROCEDURE DIVISION.<br>       000-Main. *>Can this be something else?<br>           DISPLAY "Hello from COBOL"<br>           CALL 'emscripten_run_script' USING BY CONTENT JSCODE<br>           MOVE 26 TO RSV<br>           CALL 'ff_' USING BY REFERENCE RS, BY VALUE RSV,<br>               RETURNING RETURN2<br>      *This function passes the wrong data type into the string length<br>      *but it is working for now.         <br>           DISPLAY RS<br>           DISPLAY "ff return: " RETURN2<br>           PERFORM LOOP1 VARYING INDEX1 FROM 0 BY 1 UNTIL INDEX1 > 5<br>           STOP RUN.<br>       LOOP1.<br>           CALL 'f_' USING BY CONTENT INDEX1, RETURNING RETURN1<br>           DISPLAY "f return: " RETURN1.<br>       END PROGRAM MAIN.<br>
+		</code>
+		</div>
+		<div>
+		f1.f:
+		<code><br>
+INTEGER FUNCTION f(m)<br>      f = m<br>      RETURN<br>      END<br>
+		</code>
+		</div>
+		<div>
+		f2.f:
+		<code><br>
+INTEGER FUNCTION ff(m)<br>      CHARACTER*26 m<br>      WRITE(*,*)'Hello from Fortran'<br>      m = 'Return string from Fortran'<br>      ff = 20<br>      RETURN<br>      END<br>
+		</code>
+		</div>
+
+	</body>
+</html>
